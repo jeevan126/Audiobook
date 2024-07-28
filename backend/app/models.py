@@ -12,6 +12,7 @@ class Audiobook(Base):
     cover_image = Column(String)
     description = Column(String)
     avg_rating = Column(Float, default=0.0)
+    total_reviews = Column(Integer, default=0)
 
     reviews = relationship("Review", back_populates="audiobook")
 

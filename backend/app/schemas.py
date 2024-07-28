@@ -25,10 +25,18 @@ class AudiobookBase(BaseModel):
 class AudiobookCreate(AudiobookBase):
     pass
 
+class AudiobookUpdate(BaseModel):
+    title: Optional[str] = None
+    author: Optional[str] = None
+    genre: Optional[str] = None
+    cover_image: Optional[str] = None
+    description: Optional[str] = None
+
 class Audiobook(AudiobookBase):
     id: int
     avg_rating: float
     reviews: List[Review] = []
+    total_reviews: int
 
     class Config:
         orm_mode = True
