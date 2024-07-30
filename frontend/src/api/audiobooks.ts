@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:8000";
+const API_URL = "https://audiobook-hz1w79hlg-jeevan126s-projects.vercel.app";
 
 interface Params {
     search ?: string,
@@ -11,13 +11,6 @@ interface Params {
 export const getAudiobooks = async (params:Params) => {
     const response = await axios.get(`${API_URL}/audiobooks/`, {params});
     return response.data;
-    // if(query) {
-    //     const response = await axios.get(`${API_URL}/audiobooks/?search=${query}`);
-    //     return response.data;
-    // } else {
-    //     const response = await axios.get(`${API_URL}/audiobooks/`);
-    //     return response.data;
-    // }
 };
 
 export const getAudiobookDetails = async (id: number) => {

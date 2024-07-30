@@ -4,9 +4,10 @@ import { getAudiobookDetails, submitReview } from "../api/audiobooks";
 import ReviewForm from "./ReviewForm";
 import Modal from "./Modal";
 import { useSearchParams } from 'next/navigation';
-import {ToastContainer, toast } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import { ClipLoader } from 'react-spinners';
-import Link from 'next/link';
+import Navbar from "./Navbar";
+import BackButton from "./BackButton";
 
 const AudiobookDetails: React.FC = () => {
     const searchParams = useSearchParams();
@@ -62,74 +63,62 @@ const AudiobookDetails: React.FC = () => {
 
     return (
         <>
-        <nav className="fixed top-0 left-0 w-full bg-red-500 p-4 shadow-md flex justify-between items-center">
-            <div className="text-white text-2xl font-bold">
-                <Link href="/">
-                    AwazFM
-                </Link>
-            </div>
-            <div className="relative">
-                <input
-                    type="text"
-                    className="p-2 rounded-md"
-                    placeholder="Search by book or author"
-                />
-            </div>
-        </nav>
-        <div className="pt-24 max-w-4xl mx-auto p-6 mt-1 bg-white rounded-lg shadow-md">
-            <div className="flex items-center mb-6">
-                <img
-                    src={audiobook.cover_image}
-                    alt={audiobook.title}
-                    className="w-24 h-24 object-cover rounded-xl mr-4"
-                />
-                <div>
-                    <h1 className="text-2xl font-bold">{audiobook.title}</h1>
-                    <h2 className="text-lg text-gray-600">{audiobook.author}</h2>
-                    <p className="text-sm text-gray-500">{audiobook.genre}</p>
-                </div>
-            </div>
-            <p className="mb-6">{audiobook.description}</p>
-            <div className="mb-6 flex items-center justify-between">
-                <div>
-                    <h3 className="text-xl font-semibold">Average Rating</h3>
-                    <div className="flex items-center">
-                        <div className="text-red-500">
-                            {renderStars(audiobook.avg_rating)}
-                        </div>
-                        <p className="ml-2 text-gray-700">
-                            {audiobook.avg_rating.toFixed(1)}/5 ({audiobook.total_reviews} reviews)
-                        </p>
+            <Navbar onSearch={() => {}} />
+            <BackButton />
+            <div className="mt-24 pt-16 max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md">
+                <div className="flex items-center mb-6">
+                    <img
+                        src={audiobook.cover_image}
+                        alt={audiobook.title}
+                        className="w-24 h-24 object-cover rounded-xl mr-4"
+                    />
+                    <div>
+                        <h1 className="text-2xl font-bold">{audiobook.title}</h1>
+                        <h2 className="text-lg text-gray-600">{audiobook.author}</h2>
+                        <p className="text-sm text-gray-500">{audiobook.genre}</p>
                     </div>
                 </div>
-                <button 
-                    className="px-4 py-2 bg-red-500 text-white rounded-lg shadow-md hover:bg-red-600"
-                    onClick={() => setIsModalOpen(true)}
-                >
-                    Add Review
-                </button>
-            </div>
-            <div>
-                <h3 className="text-xl font-semibold mb-4">Reviews</h3>
-                {audiobook.reviews.map((review: any) => (
-                    <div key={review.id} className="mb-4 p-4 border rounded-lg shadow-sm">
+                <p className="mb-6">{audiobook.description}</p>
+                <div className="mb-6 flex items-center justify-between">
+                    <div>
+                        <h3 className="text-xl font-semibold">Average Rating</h3>
                         <div className="flex items-center">
                             <div className="text-red-500">
-                                {renderStars(review.rating)}
+                                {renderStars(audiobook.avg_rating)}
                             </div>
+                            <p className="ml-2 text-gray-700">
+                                {audiobook.avg_rating.toFixed(1)}/5 ({audiobook.total_reviews} reviews)
+                            </p>
                         </div>
-                        <p>{review.review_text}</p>
                     </div>
-                ))}
+                    <button 
+                        className="px-4 py-2 bg-red-500 text-white rounded-lg shadow-md hover:bg-red-600"
+                        onClick={() => setIsModalOpen(true)}
+                    >
+                        Add Review
+                    </button>
+                </div>
+                <div>
+                    <h3 className="text-xl font-semibold mb-4">Reviews</h3>
+                    {audiobook.reviews.map((review: any) => (
+                        <div key={review.id} className="mb-4 p-4 border rounded-lg shadow-sm">
+                            <div className="flex items-center">
+                                <div className="text-red-500">
+                                    {renderStars(review.rating)}
+                                </div>
+                            </div>
+                            <p>{review.review_text}</p>
+                        </div>
+                    ))}
+                </div>
+
+                <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+                    <h2 className="text-xl font-semibold mb-4">Submit Your Review</h2>
+                    <ReviewForm onSubmit={handleReviewSubmit} />
+                </Modal>
+
+                <ToastContainer position="bottom-right" />
             </div>
-
-            <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-                <h2 className="text-xl font-semibold mb-4">Submit Your Review</h2>
-                <ReviewForm onSubmit={handleReviewSubmit} />
-            </Modal>
-
-            <ToastContainer position="bottom-right" />
-        </div>
         </>
     );
 };
